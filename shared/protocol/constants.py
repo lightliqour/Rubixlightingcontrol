@@ -1,0 +1,6 @@
+DISCOVERY_MESSAGE = "discovery"
+STATUS_MESSAGE = "status"
+CONFIG_MESSAGE = "config"
+FRAME_MESSAGE = "frame"
+SYNC_MESSAGE = "sync"
+FIRMWARE_MESSAGE = "firmware"
