@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.core.config import settings
+from app.config.store import config_store
 
 
 router = APIRouter()
@@ -8,8 +8,10 @@ router = APIRouter()
 
 @router.get("/status")
 async def system_status() -> dict[str, str]:
+    config = config_store.load()
+
     return {
-        "project": settings.project_name,
-        "version": settings.version,
+        "project": config.project_name,
+        "version": config.version,
         "status": "online",
     }

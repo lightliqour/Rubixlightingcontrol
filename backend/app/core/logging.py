@@ -1,13 +1,15 @@
 import logging
 
-from app.core.config import settings
+from app.config.store import config_store
 
 
 def configure_logging() -> None:
+    config = config_store.load()
+
     logging.basicConfig(
         level=getattr(
             logging,
-            settings.log_level.upper(),
+            config.log_level.upper(),
             logging.INFO,
         ),
         format=(
