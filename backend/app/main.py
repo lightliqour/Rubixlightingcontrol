@@ -4,7 +4,7 @@ import logging
 from fastapi import FastAPI
 
 from app.api.v1.router import router as api_v1_router
-from app.core.config import settings
+from app.config.store import config_store
 from app.core.logging import configure_logging
 
 
@@ -13,28 +13,33 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    config = config_store.load()
+
     configure_logging()
+
+    app.state.config = config
 
     logger.info(
         "Starting %s %s",
-        settings.project_name,
-        settings.version,
+        config.project_name,
+        config.version,
     )
 
     yield
 
     logger.info(
         "Stopping %s",
-        settings.project_name,
+        config.project_name,
     )
 
 
+initial_config = config_store.load()
+
 app = FastAPI(
-    title=settings.project_name,
-    version=settings.version,
+    title=initial_config.project_name,
+    version=initial_config.version,
     lifespan=lifespan,
 )
-
 
 app.include_router(
     api_v1_router,
@@ -44,8 +49,10 @@ app.include_router(
 
 @app.get("/")
 async def root() -> dict[str, str]:
+    config = config_store.load()
+
     return {
-        "project": settings.project_name,
-        "version": settings.version,
+        "project": config.project_name,
+        "version": config.version,
         "status": "online",
     }

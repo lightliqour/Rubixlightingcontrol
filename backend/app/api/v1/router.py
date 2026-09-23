@@ -1,5 +1,6 @@
 from fastapi import APIRouter, WebSocket
 
+from app.api.v1.settings import router as settings_router
 from app.api.v1.system import router as system_router
 from app.websocket.manager import websocket_manager
 
@@ -10,6 +11,12 @@ router.include_router(
     system_router,
     prefix="/system",
     tags=["system"],
+)
+
+router.include_router(
+    settings_router,
+    prefix="/settings",
+    tags=["settings"],
 )
 
 
